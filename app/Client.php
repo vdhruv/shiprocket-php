@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Shiprocket;
 
@@ -6,7 +6,6 @@ use Exception;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException as HttpClientException;
 use GuzzleHttp\Psr7\Response;
-
 use ReflectionClass;
 
 class Client
@@ -16,29 +15,31 @@ class Client
         Resources\Products,
         Resources\Settings,
         Resources\Orders,
-        Resources\Couriers;
+        Resources\Couriers,
+        Resources\Shipments,
+        Resources\Channels;
 
-	public $token;
+    public $token;
     public $email;
     public $password;
-	public $use_sandbox;
-	public $version = 'v1';
+    public $version = 'v1';
     public $rate_limit = null;
     public $httpClient;
 
     /**
      * Creates a new client.
      *
-     * @param    array    $config
+     * @param array $config
+     * @throws Exception
      */
     public function __construct($config = [])
-    {        
-		$this->configure($config);
+    {
+        $this->configure($config);
         $this->httpClient = new HttpClient;
-        
-        if (empty($this->token)) {
-            $this->setToken($this->getToken());
-        }
+
+//        if (empty($this->token)) {
+        $this->setToken($this->getToken());
+//        }
     }
 
     /**
@@ -56,8 +57,8 @@ class Client
     /**
      * Gets HttpClient config for verb and parameters.
      *
-     * @param    string   $verb
-     * @param    array    $parameters
+     * @param string $verb
+     * @param array $parameters
      *
      * @return   array
      */
@@ -93,23 +94,22 @@ class Client
     /**
      * Builds url from path.
      *
-     * @param    string   $path
-     *
+     * @param string $path
      * @return   string   Url
      */
     public function getUrlFromPath($path)
     {
         $path = ltrim($path, '/');
 
-        $host = 'https://'.($this->use_sandbox ? 'krmct000.kartrocket.com/' : 'apiv2.shiprocket.in/');
+        $host = 'https://apiv2.shiprocket.in/';
 
-        return $host.($this->version ? $this->version : '').'/external/'.$path;
+        return $host . ($this->version ? $this->version : '') . '/external/' . $path;
     }
 
     /**
      * Handles http client exceptions.
      *
-     * @param    HttpClientException $e
+     * @param HttpClientException $e
      *
      * @return   void
      * @throws   Exception
@@ -117,8 +117,8 @@ class Client
     public function handleRequestException(HttpClientException $e)
     {
         if ($response = $e->getResponse()) {
-            $exception = new Exception($response->getReasonPhrase(), $response->getStatusCode(), $e);
-            // $exception->setBody(json_decode($response->getBody()));
+            $exception = new Exception($response->getMessage(), $response->getStatusCode(), $e);
+//            $exception->setBody(json_decode($response->getBody()));
 
             throw $exception;
         }
@@ -129,31 +129,27 @@ class Client
     /**
      * Parses configuration.
      *
-     * @param    array    $config
-     *
-     * @return   array    $config
+     * @param array $config
+     * @return Client $config
      */
     public function configure($config = [])
     {
-        $this->email 		= $config['email'];
-        $this->password 	= $config['password'];
-        $this->use_sandbox  = $config['use_sandbox'];
-        
+        $this->email = $config['email'];
+        $this->password = $config['password'];
+
         return $this;
     }
 
     /**
      * Parses configuration.
      *
-     * @param    array    $config
      * @return   array    $config
      */
     public function getConfiguration()
     {
         return [
-            'email'         => $this->email,
-            'password'      => $this->password,
-            'use_sandbox'   => $this->use_sandbox
+            'email' => $this->email,
+            'password' => $this->password,
         ];
     }
 
@@ -161,12 +157,13 @@ class Client
      * Get authorization token
      *
      * @return string
+     * @throws Exception
      */
     public function getToken()
     {
         return $this->request(
-            'post', 
-            'auth/login', 
+            'post',
+            'auth/login',
             $this->getConfiguration()
         )['token'];
     }
@@ -175,21 +172,21 @@ class Client
      * Set authorization token
      *
      * @param string $value
-     * @return this
+     * @return Client
      */
     public function setToken($value)
     {
         $this->token = $value;
-        
+
         return $this;
     }
 
     /**
      * Makes a request to the Shiprocket API and returns the response.
      *
-     * @param    string   $verb       The Http verb to use
-     * @param    string   $path       The path of the APi after the domain
-     * @param    array    $parameters Parameters
+     * @param string $verb The Http verb to use
+     * @param string $path The path of the APi after the domain
+     * @param array $parameters Parameters
      *
      * @return   stdClass             The JSON response from the request
      * @throws   Exception
@@ -203,24 +200,23 @@ class Client
 
         try {
             $response = $client->$verb($url, $config);
+            return json_decode($response->getBody(), 1);
         } catch (HttpClientException $e) {
             $this->handleRequestException($e);
         }
-
-        return json_decode($response->getBody(), 1);
     }
 
     /**
      * Sets Http Client.
      *
-     * @param    HttpClient  $client
+     * @param HttpClient $client
      *
      * @return   Client
      */
     public function setHttpClient(HttpClient $client)
     {
-		$this->httpClient = $client;
-		
+        $this->httpClient = $client;
+
         return $this;
     }
 }

@@ -1,22 +1,38 @@
-<?php 
+<?php
 
 namespace Shiprocket\Resources;
+
+use Exception;
+use stdClass;
 
 trait Products
 {
     /**
      * @return   stdClass               The JSON response from the request
+     * @throws Exception
      */
     public function getProducts()
     {
         return $this->request('get', 'products');
     }
-    
+
+    /**
+     * @param $product_id
+     *
+     * @return stdClass
+     * @throws Exception
+     */
     public function getProduct($product_id)
     {
         return $this->request('get', 'product/'.$product_id);
     }
 
+    /**
+     * @param array $attributes
+     *
+     * @return stdClass
+     * @throws Exception
+     */
     public function createProduct($attributes = [])
     {
         return $this->request('post', 'products', $attributes);

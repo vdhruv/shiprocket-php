@@ -1,35 +1,43 @@
-<?php 
+<?php
 
 namespace Shiprocket\Resources;
+
+use Exception;
+use stdClass;
 
 trait Orders
 {
     /**
      * Get all orders
      *
-     * @return void
+     * @return stdClass
+     * @throws Exception
      */
     public function getOrders()
     {
         return $this->request('get', 'orders');
     }
-    
+
     /**
      * Get order data
      *
      * @param string $order_id Shiprocket Order ID
-     * @return void
+     *
+     * @return stdClass
+     * @throws Exception
      */
     public function getOrder($order_id)
     {
-        return $this->request('get', 'orders/'.$order_id);
+        return $this->request('get', 'orders/show/'.$order_id);
     }
 
     /**
      * Create a quick order
      *
      * @param array $attributes Order data
-     * @return void
+     *
+     * @return stdClass
+     * @throws Exception
      */
     public function createQuickOrder($attributes = [])
     {
@@ -40,7 +48,9 @@ trait Orders
      * Create a linked order
      *
      * @param array $attributes Order data
-     * @return void
+     *
+     * @return stdClass
+     * @throws Exception
      */
     public function createLinkedOrder($attributes = [])
     {

@@ -1,25 +1,40 @@
-<?php 
+<?php
 
 namespace Shiprocket\Resources;
 
+use Exception;
+use stdClass;
+
 trait Users
 {
+    /**
+     * @param array $parameters
+     *
+     * @return stdClass
+     * @throws Exception
+     */
     public function login($parameters = [])
     {
         return $this->request('post', 'auth/login', $parameters);
     }
-    
+
+    /**
+     * @param $user_id
+     *
+     * @return stdClass
+     * @throws Exception
+     */
     public function getUser($user_id)
     {
-        return $this->request('get', 'users/'.$product_id);
+        return $this->request('get', 'users/' . $user_id);
     }
 
     /**
      * Makes a request to the Shiprocket API and returns the response.
      *
-     * @param    string $verb       The Http verb to use
-     * @param    string $path       The path of the APi after the domain
-     * @param    array  $parameters Parameters
+     * @param string $verb The Http verb to use
+     * @param string $path The path of the APi after the domain
+     * @param array $parameters Parameters
      *
      * @return   stdClass The JSON response from the request
      * @throws   Exception

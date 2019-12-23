@@ -3,6 +3,9 @@
 
 namespace Shiprocket\Resources;
 
+use Exception;
+use stdClass;
+
 
 trait Shipments
 {
@@ -10,7 +13,9 @@ trait Shipments
      * create, ship and generate label and menifest for order
      *
      * @param array $attributes
+     *
      * @return stdClass
+     * @throws Exception
      */
     public function createForwardShipment(array $attributes)
     {
@@ -21,7 +26,9 @@ trait Shipments
      * geneate menifest file
      *
      * @param $shipmentId
+     *
      * @return stdClass
+     * @throws Exception
      */
     public function getMenifest($shipmentId)
     {
@@ -32,14 +39,14 @@ trait Shipments
      * print menifest file
      *
      * @param array $order_ids
+     *
      * @return stdClass
+     * @throws Exception
      */
     public function printMenifest(array $order_ids)
     {
         return $this->request('post', 'manifests/print', ['order_ids' => $order_ids]);
     }
-
-
 
     /**
      * Makes a request to the Shiprocket API and returns the response.

@@ -1,6 +1,9 @@
-<?php 
+<?php
 
 namespace Shiprocket\Resources;
+
+use Exception;
+use stdClass;
 
 trait Manifests
 {

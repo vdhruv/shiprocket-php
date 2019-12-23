@@ -2,8 +2,15 @@
 
 namespace Shiprocket\Resources;
 
+use Exception;
+use stdClass;
+
 trait Channels
 {
+    /**
+     * @return stdClass
+     * @throws Exception
+     */
     public function getChannels()
     {
         return $this->request('get', 'channels/');
