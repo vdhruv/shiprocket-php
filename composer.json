@@ -1,8 +1,8 @@
 {
-    "name": "rajathans/shiprocket-php",
+    "name": "vdhruv/shiprocket-php-api",
     "description": "PHP SDK for Shiprocket",
     "version": "1.0.0",
-    "homepage" : "http://github.com/fossbrew/shiprocket-php",
+    "homepage" : "https://github.com/vdhruv/shiprocket-php-api",
     "type": "sdk",
     "authors": [
         {
@@ -10,6 +10,11 @@
             "email": "rajathans9@gmail.com",
             "homepage": "http://rajathans.github.io",
             "role": "Creator"
+        },
+        {
+            "name" : "Dhruv Vadodariay",
+            "email" : "dhruvvadodariya03@gmail.com",
+            "role": "Developer"
         }
     ],
     "keywords": [
